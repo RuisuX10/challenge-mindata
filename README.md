@@ -96,3 +96,7 @@ The image build compiles the application but skips tests. To run tests and gener
 ```
 
 After the build, open `target/site/jacoco/index.html` to view the coverage report.
+
+The project aims to maintain at least 80% coverage for instructions, branches, lines, and methods, as required by the technical challenge.
+
+Running the application with Docker Compose does not require Java or Maven to be installed on the host.
