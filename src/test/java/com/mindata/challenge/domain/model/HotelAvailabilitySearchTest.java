@@ -159,6 +159,41 @@ class HotelAvailabilitySearchTest {
     }
 
     @Test
+    void shouldRejectNullAges() {
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> new HotelAvailabilitySearch(
+                "HOTEL123",
+                LocalDate.now().plusDays(2),
+                LocalDate.now().plusDays(5),
+                null
+            )
+        );
+
+        assertEquals("La lista de edades es obligatoria", exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectNullAge() {
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> new HotelAvailabilitySearch(
+                "HOTEL123",
+                LocalDate.now().plusDays(2),
+                LocalDate.now().plusDays(5),
+                Arrays.asList(25, null)
+            )
+        );
+
+        assertEquals(
+            "Las edades deben ser mayores o iguales a cero",
+            exception.getMessage()
+        );
+    }
+
+    @Test
     void shouldProtectAgesFromModification() {
 
         List<Integer> ages = new ArrayList<>(List.of(25, 30));
