@@ -34,13 +34,17 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectNegativeAge() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+        List<Integer> ages = List.of(25, -5);
+
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
-                List.of(25, -5)
+                checkIn,
+                checkOut,
+                ages
             )
         );
 
@@ -54,8 +58,9 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectInvalidDates() {
 
-        LocalDate checkIn = LocalDate.of(2026, 10, 20);
-        LocalDate checkOut = LocalDate.of(2026, 10, 15);
+        LocalDate checkIn = LocalDate.now().plusDays(5);
+        LocalDate checkOut = LocalDate.now().plusDays(2);
+        List<Integer> ages = List.of(25, 30);
 
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
@@ -63,7 +68,7 @@ class HotelAvailabilitySearchTest {
                 "HOTEL123",
                 checkIn,
                 checkOut,
-                List.of(25, 30)
+                ages
             )
         );
 
@@ -78,6 +83,7 @@ class HotelAvailabilitySearchTest {
 
         LocalDate checkIn = LocalDate.now().minusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(1);
+        List<Integer> ages = List.of(25, 30);
 
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
@@ -85,7 +91,7 @@ class HotelAvailabilitySearchTest {
                 "HOTEL123",
                 checkIn,
                 checkOut,
-                List.of(25, 30)
+                ages
             )
         );
 
@@ -103,6 +109,9 @@ class HotelAvailabilitySearchTest {
             "",
             "   "
         );
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+        List<Integer> ages = List.of(25, 30);
 
         for (String hotelId : invalidIds) {
 
@@ -110,9 +119,9 @@ class HotelAvailabilitySearchTest {
                 IllegalArgumentException.class,
                 () -> new HotelAvailabilitySearch(
                     hotelId,
-                    LocalDate.of(2026, 10, 15),
-                    LocalDate.of(2026, 10, 20),
-                    List.of(25, 30)
+                    checkIn,
+                    checkOut,
+                    ages
                 )
             );
 
@@ -126,19 +135,20 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectNullDates() {
 
-        LocalDate validDate = LocalDate.of(2026, 10, 15);
+        LocalDate validDate = LocalDate.now().plusDays(2);
+        List<Integer> ages = List.of(25);
 
         assertAll(
             () -> assertThrows(
                 IllegalArgumentException.class,
                 () -> new HotelAvailabilitySearch(
-                    "HOTEL123", null, validDate, List.of(25)
+                    "HOTEL123", null, validDate, ages
                 )
             ),
             () -> assertThrows(
                 IllegalArgumentException.class,
                 () -> new HotelAvailabilitySearch(
-                    "HOTEL123", validDate, null, List.of(25)
+                    "HOTEL123", validDate, null, ages
                 )
             )
         );
@@ -147,13 +157,17 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectEmptyAges() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+        List<Integer> emptyAges = List.of();
+
         assertThrows(
             IllegalArgumentException.class,
             () -> new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
-                List.of()
+                checkIn,
+                checkOut,
+                emptyAges
             )
         );
     }
@@ -161,12 +175,15 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectNullAges() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.now().plusDays(2),
-                LocalDate.now().plusDays(5),
+                checkIn,
+                checkOut,
                 null
             )
         );
@@ -177,13 +194,17 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldRejectNullAge() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+        List<Integer> ages = Arrays.asList(25, null);
+
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.now().plusDays(2),
-                LocalDate.now().plusDays(5),
-                Arrays.asList(25, null)
+                checkIn,
+                checkOut,
+                ages
             )
         );
 
@@ -206,12 +227,13 @@ class HotelAvailabilitySearchTest {
         );
 
         ages.add(40);
+        List<Integer> immutableAges = search.ages();
 
         assertAll(
             () -> assertEquals(List.of(25, 30), search.ages()),
             () -> assertThrows(
                 UnsupportedOperationException.class,
-                () -> search.ages().add(50)
+                () -> immutableAges.add(50)
             )
         );
     }

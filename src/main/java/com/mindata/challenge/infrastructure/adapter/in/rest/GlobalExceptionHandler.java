@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+        private static final String ERROR_KEY = "error";
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleValidation(
             IllegalArgumentException ex
     ) {
         return ResponseEntity
                 .badRequest()
-                .body(Map.of("error", ex.getMessage()));
+                .body(Map.of(ERROR_KEY, ex.getMessage()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -28,7 +30,7 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity
                 .badRequest()
-                .body(Map.of("error", "JSON inválido o campos con formato incorrecto"));
+                .body(Map.of(ERROR_KEY, "JSON inválido o campos con formato incorrecto"));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -37,7 +39,7 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity
                 .badRequest()
-                .body(Map.of("error", "Falta el parámetro obligatorio: " + ex.getParameterName()));
+                .body(Map.of(ERROR_KEY, "Falta el parámetro obligatorio: " + ex.getParameterName()));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -46,6 +48,6 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", ex.getMessage()));
+                .body(Map.of(ERROR_KEY, ex.getMessage()));
     }
 }
