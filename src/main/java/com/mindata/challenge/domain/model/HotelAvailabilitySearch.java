@@ -32,6 +32,12 @@ public record HotelAvailabilitySearch(
             );
         }
 
+        if (checkIn.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                "El checkIn no puede ser anterior a la fecha actual"
+            );
+        }
+
         if (ages == null || ages.isEmpty()) {
             throw new IllegalArgumentException(
                     "La lista de edades es obligatoria"

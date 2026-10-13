@@ -74,6 +74,28 @@ class HotelAvailabilitySearchTest {
     }
 
     @Test
+    void shouldRejectPastCheckInDate() {
+
+        LocalDate checkIn = LocalDate.now().minusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(1);
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> new HotelAvailabilitySearch(
+                "HOTEL123",
+                checkIn,
+                checkOut,
+                List.of(25, 30)
+            )
+        );
+
+        assertEquals(
+            "El checkIn no puede ser anterior a la fecha actual",
+            exception.getMessage()
+        );
+    }
+
+    @Test
     void shouldRejectInvalidHotelId() {
 
         List<String> invalidIds = Arrays.asList(
