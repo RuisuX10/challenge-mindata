@@ -30,10 +30,13 @@ class SearchPersistenceAdapterTest {
     @Test
     void shouldSaveSearchCorrectly() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
+                checkIn,
+                checkOut,
                 List.of(20, 30, 5)
         );
 
@@ -54,14 +57,8 @@ class SearchPersistenceAdapterTest {
         assertAll(
                 () -> assertEquals("search-123", savedEntity.getSearchId()),
                 () -> assertEquals("HOTEL123", savedEntity.getHotelId()),
-                () -> assertEquals(
-                        LocalDate.of(2026, 10, 15),
-                        savedEntity.getCheckIn()
-                ),
-                () -> assertEquals(
-                        LocalDate.of(2026, 10, 20),
-                        savedEntity.getCheckOut()
-                ),
+                () -> assertEquals(checkIn, savedEntity.getCheckIn()),
+                () -> assertEquals(checkOut, savedEntity.getCheckOut()),
                 () -> assertEquals("20,30,5", savedEntity.getAges())
         );
     }

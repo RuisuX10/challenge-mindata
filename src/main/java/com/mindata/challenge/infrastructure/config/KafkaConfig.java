@@ -12,7 +12,7 @@ public class KafkaConfig {
     public NewTopic hotelAvailabilitySearchesTopic() {
         return TopicBuilder
                 .name("hotel_availability_searches")
-                .partitions(1)
+                .partitions(6)
                 .replicas(1)
                 .build();
     }

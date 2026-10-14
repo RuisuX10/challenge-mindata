@@ -34,10 +34,13 @@ class SearchControllerTest {
     @Test
     void shouldCreateSearch() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+
         SearchRequest request = new SearchRequest(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
+                checkIn,
+                checkOut,
                 List.of(20, 30, 5)
         );
 
@@ -55,8 +58,8 @@ class SearchControllerTest {
         verify(searchUseCase).createSearch(
                 new HotelAvailabilitySearch(
                         "HOTEL123",
-                        LocalDate.of(2026, 10, 15),
-                        LocalDate.of(2026, 10, 20),
+                        checkIn,
+                        checkOut,
                         List.of(20, 30, 5)
                 )
         );
@@ -65,10 +68,13 @@ class SearchControllerTest {
     @Test
     void shouldReturnSearchCount() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
+                checkIn,
+                checkOut,
                 List.of(20, 30, 5)
         );
 

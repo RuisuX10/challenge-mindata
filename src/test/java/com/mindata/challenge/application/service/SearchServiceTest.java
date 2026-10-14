@@ -31,10 +31,13 @@ class SearchServiceTest {
     @Test
     void shouldCreateSearchAndPublishEvent() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
             "HOTEL123",
-            LocalDate.of(2026, 10, 15),
-            LocalDate.of(2026, 10, 20),
+            checkIn,
+            checkOut,
             List.of(25, 30)
         );
 

@@ -14,19 +14,19 @@ class HotelAvailabilitySearchTest {
     @Test
     void shouldCreateValidSearch() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
+            checkIn,
+            checkOut,
                 List.of(25, 30, 5)
         );
 
         assertAll(
                 () -> assertEquals("HOTEL123", search.hotelId()),
-                () -> assertEquals(
-                        LocalDate.of(2026, 10, 15),
-                        search.checkIn()
-                ),
+                () -> assertEquals(checkIn, search.checkIn()),
                 () -> assertEquals(3, search.ages().size())
         );
     }
@@ -218,11 +218,13 @@ class HotelAvailabilitySearchTest {
     void shouldProtectAgesFromModification() {
 
         List<Integer> ages = new ArrayList<>(List.of(25, 30));
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
 
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
             "HOTEL123",
-            LocalDate.of(2026, 10, 15),
-            LocalDate.of(2026, 10, 20),
+            checkIn,
+            checkOut,
             ages
         );
 

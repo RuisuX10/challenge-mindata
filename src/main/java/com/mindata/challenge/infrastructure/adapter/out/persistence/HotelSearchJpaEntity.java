@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "hotel_searches")
+@Table(
+    name = "hotel_searches",
+    indexes = @Index(
+        name = "idx_hotel_search_match",
+        columnList = "hotel_id, check_in, check_out, ages"
+    )
+)
 public class HotelSearchJpaEntity {
 
     @Id

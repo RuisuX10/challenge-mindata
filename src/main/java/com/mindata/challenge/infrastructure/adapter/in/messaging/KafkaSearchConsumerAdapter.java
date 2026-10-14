@@ -25,7 +25,8 @@ public class KafkaSearchConsumerAdapter {
 
     @KafkaListener(
             topics = "hotel_availability_searches",
-            groupId = "challenge-search-consumer"
+            groupId = "challenge-search-consumer",
+            concurrency = "6"
     )
     public void consume(String json) {
 

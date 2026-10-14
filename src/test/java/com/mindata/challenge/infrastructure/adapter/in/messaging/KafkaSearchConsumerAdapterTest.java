@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -33,22 +34,26 @@ class KafkaSearchConsumerAdapterTest {
     @Test
     void shouldConsumeMessageAndSaveSearch() {
 
+        LocalDate checkIn = LocalDate.now().plusDays(2);
+        LocalDate checkOut = checkIn.plusDays(5);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         String json = """
                 {
                   "searchId": "search-123",
                   "search": {
                     "hotelId": "HOTEL123",
-                    "checkIn": "15/10/2026",
-                    "checkOut": "20/10/2026",
+                    "checkIn": "%s",
+                    "checkOut": "%s",
                     "ages": [20, 30, 5]
                   }
                 }
-                """;
+                """.formatted(dateFormatter.format(checkIn), dateFormatter.format(checkOut));
 
         HotelAvailabilitySearch search = new HotelAvailabilitySearch(
                 "HOTEL123",
-                LocalDate.of(2026, 10, 15),
-                LocalDate.of(2026, 10, 20),
+                checkIn,
+                checkOut,
                 List.of(20, 30, 5)
         );
 

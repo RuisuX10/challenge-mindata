@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.*;
@@ -17,6 +19,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class GlobalExceptionHandlerTest {
+
+        private static final DateTimeFormatter DATE_FORMATTER =
+                        DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private MockMvc mockMvc;
 
@@ -44,14 +49,17 @@ class GlobalExceptionHandlerTest {
     void shouldReturnBadRequestWhenCheckInIsAfterCheckOut()
             throws Exception {
 
+                LocalDate checkIn = LocalDate.now().plusDays(5);
+                LocalDate checkOut = checkIn.minusDays(1);
+
         String json = """
                 {
                     "hotelId": "HOTEL123",
-                    "checkIn": "20/10/2026",
-                    "checkOut": "15/10/2026",
+                                        "checkIn": "%s",
+                                        "checkOut": "%s",
                     "ages": [20, 30, 5]
                 }
-                """;
+                                """.formatted(DATE_FORMATTER.format(checkIn), DATE_FORMATTER.format(checkOut));
 
         mockMvc.perform(post("/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -67,14 +75,17 @@ class GlobalExceptionHandlerTest {
     void shouldReturnBadRequestWhenAgeIsNegative()
             throws Exception {
 
+                LocalDate checkIn = LocalDate.now().plusDays(2);
+                LocalDate checkOut = checkIn.plusDays(5);
+
         String json = """
                 {
                     "hotelId": "HOTEL123",
-                    "checkIn": "15/10/2026",
-                    "checkOut": "20/10/2026",
+                                        "checkIn": "%s",
+                                        "checkOut": "%s",
                     "ages": [20, -5]
                 }
-                """;
+                                """.formatted(DATE_FORMATTER.format(checkIn), DATE_FORMATTER.format(checkOut));
 
         mockMvc.perform(post("/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,14 +101,16 @@ class GlobalExceptionHandlerTest {
     void shouldReturnBadRequestForInvalidJson()
             throws Exception {
 
+                LocalDate checkOut = LocalDate.now().plusDays(5);
+
         String invalidJson = """
                 {
                     "hotelId": "HOTEL123",
                     "checkIn": "fecha-invalida",
-                    "checkOut": "20/10/2026",
+                                        "checkOut": "%s",
                     "ages": [20, 30]
                 }
-                """;
+                                """.formatted(DATE_FORMATTER.format(checkOut));
 
         mockMvc.perform(post("/search")
                         .contentType(MediaType.APPLICATION_JSON)
